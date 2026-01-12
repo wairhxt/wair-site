@@ -167,59 +167,5 @@
             </a>
         </div>
     </div>
-
-    <script>
-        // --- LOGIQUE JAVASCRIPT ---
-
-        const overlay = document.getElementById('overlay');
-        const mainCard = document.getElementById('main-card');
-        const audio = document.getElementById('bg-music');
-        const typewriterElement = document.getElementById('typewriter');
-
-        // Textes à afficher dans la bio (machine à écrire)
-        const texts = ["Développeur", "Gamer", "Fan de CSS", "Bienvenue."];
-        let textIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-
-        // Fonction pour gérer le clic d'entrée
-        overlay.addEventListener('click', () => {
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                mainCard.classList.add('visible');
-                // audio.play(); // Décommenter si tu as mis un vrai lien MP3 valide
-            }, 800);
-        });
-
-        // Fonction Effet Machine à Écrire
-        function typeWriter() {
-            const currentText = texts[textIndex];
-            
-            if (isDeleting) {
-                typewriterElement.textContent = currentText.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                typewriterElement.textContent = currentText.substring(0, charIndex + 1);
-                charIndex++;
-            }
-
-            let typeSpeed = isDeleting ? 50 : 100;
-
-            if (!isDeleting && charIndex === currentText.length) {
-                typeSpeed = 2000; // Pause à la fin du mot
-                isDeleting = true;
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                textIndex = (textIndex + 1) % texts.length; // Passe au mot suivant
-                typeSpeed = 500;
-            }
-
-            setTimeout(typeWriter, typeSpeed);
-        }
-
-        // Lancer l'effet machine à écrire au chargement
-        document.addEventListener('DOMContentLoaded', typeWriter);
-    </script>
 </body>
 </html>
