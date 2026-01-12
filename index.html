@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - Guns.lol Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- RESET ET BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Space Mono', monospace;
+            height: 100vh;
+            overflow: hidden; /* Empêche le scroll */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3VubGR3dnB6bzh6Z3U4bHZnZ3J6Z3U4bHZnZ3J6Z3U4bHZnZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/U3qYN8S0j3bpK/giphy.gif'); /* Fond animé (GIF sombre) */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* --- ÉCRAN "CLICK TO ENTER" --- */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.8s ease;
+        }
+
+        #overlay h1 {
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        /* --- CARTE DE PROFIL (Glassmorphism) --- */
+        .card {
+            background: rgba(20, 20, 20, 0.6); /* Fond semi-transparent */
+            backdrop-filter: blur(10px); /* Effet de flou */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            width: 350px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); /* Lueur autour de la carte */
+            opacity: 0; /* Caché au début */
+            transform: scale(0.9);
+            transition: all 0.8s ease;
+        }
+
+        /* Image de profil */
+        .pfp {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            object-fit: cover;
+        }
+
+        .username {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Texte lumineux */
+        }
+
+        .bio {
+            font-size: 0.9rem;
+            color: #cccccc;
+            margin-bottom: 25px;
+            min-height: 1.2em;
+        }
+
+        /* --- LIENS SOCIAUX --- */
+        .links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .links a {
+            color: #fff;
+            font-size: 1.5rem;
+            transition: transform 0.3s, color 0.3s, text-shadow 0.3s;
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            transform: translateY(-3px);
+            color: #dcdcdc;
+            text-shadow: 0 0 15px #ffffff;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes pulse {
+            0% { opacity: 0.5; text-shadow: 0 0 0 #fff; }
+            50% { opacity: 1; text-shadow: 0 0 10px #fff; }
+            100% { opacity: 0.5; text-shadow: 0 0 0 #fff; }
+        }
+
+        /* Classe pour afficher le contenu après le clic */
+        .visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Curseur clignotant pour l'effet machine à écrire */
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            background-color: white;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="https://example.com/ma-musique.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="overlay">
+        <h1>cliquez pour entrer...</h1>
+    </div>
+
+    <div class="card" id="main-card">
+        <img src="https://i.pinimg.com/736x/0d/64/98/0d64989794b1a4c9d89bff571d3d5842.jpg" alt="Profile" class="pfp">
+        
+        <h2 class="username">TonPseudo</h2>
+        
+        <p class="bio"><span id="typewriter"></span><span class="cursor">|</span></p>
+
+        <div class="links">
+            <a href="https://discord.com" target="_blank" title="Discord">
+                <i class="fab fa-discord"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://github.com" target="_blank" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="https://youtube.com" target="_blank" title="YouTube">
+                <i class="fab fa-youtube"></i>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // --- LOGIQUE JAVASCRIPT ---
+
+        const overlay = document.getElementById('overlay');
+        const mainCard = document.getElementById('main-card');
+        const audio = document.getElementById('bg-music');
+        const typewriterElement = document.getElementById('typewriter');
+
+        // Textes à afficher dans la bio (machine à écrire)
+        const texts = ["Développeur", "Gamer", "Fan de CSS", "Bienvenue."];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        // Fonction pour gérer le clic d'entrée
+        overlay.addEventListener('click', () => {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                mainCard.classList.add('visible');
+                // audio.play(); // Décommenter si tu as mis un vrai lien MP3 valide
+            }, 800);
+        });
+
+        // Fonction Effet Machine à Écrire
+        function typeWriter() {
+            const currentText = texts[textIndex];
+            
+            if (isDeleting) {
+                typewriterElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentText.length) {
+                typeSpeed = 2000; // Pause à la fin du mot
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % texts.length; // Passe au mot suivant
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeWriter, typeSpeed);
+        }
+
+        // Lancer l'effet machine à écrire au chargement
+        document.addEventListener('DOMContentLoaded', typeWriter);
+    </script>
+</body>
+</html>
